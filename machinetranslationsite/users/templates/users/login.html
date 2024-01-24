@@ -9,7 +9,7 @@
                     <!-- Register form-->
                     <div class="bg-light rounded-4 py-5 px-4 px-md-5">
                         <div class="text-center mb-5">
-                            <div class="feature bg-primary bg-gradient-primary-to-secondary text-white rounded-3 mb-3"><i class="bi bi-envelope"></i></div>
+                            <img class="profile-img" src="{% static 'users/loginpic.png' %}" alt="..." />
                             <h1 class="fw-bolder">Login</h1>
                             <p class="lead fw-normal text-muted mb-0">Login to continue translating!</p>
                         </div>
@@ -19,8 +19,8 @@
       <fieldset class="form-group">
           {{ form|crispy }}
       </fieldset>
-        <div class="d-grid"> <button class="btn btn-primary btn-lg" id="submitButton" type="submit">Submit</button></div>
-          <div class="col-auto"><div class="small m-0">Don't have an account?<a href="{% url 'site:register' %}">Register here</a></div></div>
+        <div class="d-grid"> <button class="btn btn-primary" id="submitButton" style="margin:20px;" type="submit">Submit</button></div>
+          <div class="col-auto"><div class="small m-0">Don't have an account? <a href="{% url 'site:register' %}">Register here</a></div></div>
     </form>
                         </div>
                     </div>
