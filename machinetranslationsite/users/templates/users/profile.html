@@ -32,8 +32,15 @@
           {{ u_form|crispy }}
           {{ p_form|crispy }}
       </fieldset>
-        <div class="d-grid"> <button class="btn btn-primary"  style="margin:20px;" id="submitButton" type="submit">Update profile</button></div>
+        <div class="d-grid">
+            <a class="btn px-5 py-3 me-sm-3 fs-6 fw-bolder"> <button class="btn btn-primary"  style="margin:20px; width: 100%" id="submitButton" type="submit">Update profile</button></a>
+        </div>
     </form>
+                            <div class="d-grid">
+                                <div class="col-lg-8">You can change your password by clicking below:</div>
+                                <a class="btn px-5 py-3 me-sm-3 fs-6 fw-bolder" href="/profile"><button class="btn btn-primary" style="margin:20px; width: 100%">Change password</button></a>
+                            </div>
+
 
                         </div>
                     </div>

@@ -46,7 +46,7 @@ INSTALLED_APPS = [
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
-LOGIN_REDIRECT_URL = 'site:home'
+LOGIN_REDIRECT_URL = 'site:loggedinhome'
 
 MEDIA_ROOT = BASE_DIR / "media"
 MEDIA_URL = '/media/'

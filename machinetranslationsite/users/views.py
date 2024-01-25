@@ -17,6 +17,10 @@ def login(request):
     return render(request, 'users/login.html')
 
 
+def loggedinhome(request):
+    return render(request, 'users/loggedinhome.html')
+
+
 def logout(request):
     return render(request, 'users/logout.html')
 
@@ -29,7 +33,8 @@ def register(request):
         if form.is_valid():
             user = form.save()
             username = form.cleaned_data.get('username')
-            messages.success(request, f'Hi {username}, your account was created successfully. Please login to continue.')
+            messages.success(request,
+                             f'Hi {username}, your account was created successfully. Please login to continue.')
             return redirect(reverse('site:home'))
 
     return render(request, 'users/register.html', {'form': form})
