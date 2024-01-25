@@ -48,6 +48,9 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 LOGIN_REDIRECT_URL = 'site:home'
 
+MEDIA_ROOT = BASE_DIR / "media"
+MEDIA_URL = '/media/'
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
