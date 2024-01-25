@@ -3,7 +3,7 @@ from django.conf.urls.static import static
 from django.urls import path
 from . import views
 from django.contrib.auth import views as auth_view
-
+from django.contrib.auth import views as auth_views
 
 app_name = 'site'
 urlpatterns = [
@@ -13,7 +13,8 @@ urlpatterns = [
     path('logout/', auth_view.LogoutView.as_view(template_name='users/logout.html'), name='logout'),
     path('register/', views.register, name='register'),
     path('profile/', views.profile, name='profile'),
-    path('logged/', views.loggedinhome, name='loggedinhome')
+    path('logged/', views.loggedinhome, name='loggedinhome'),
+    path('password/', auth_views.PasswordChangeView.as_view(template_name='users/password.html', success_url="/password"), name='password')
 ]
 
 if settings.DEBUG:

@@ -28,6 +28,13 @@
 
     <form action="" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
+          {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+               <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
       <fieldset class="form-group">
           {{ u_form|crispy }}
           {{ p_form|crispy }}
@@ -38,7 +45,7 @@
     </form>
                             <div class="d-grid">
                                 <div class="col-lg-8">You can change your password by clicking below:</div>
-                                <a class="btn px-5 py-3 me-sm-3 fs-6 fw-bolder" href="/profile"><button class="btn btn-primary" style="margin:20px; width: 100%">Change password</button></a>
+                                <a class="btn px-5 py-3 me-sm-3 fs-6 fw-bolder" href="/password"><button class="btn btn-primary" style="margin:20px; width: 100%">Change password</button></a>
                             </div>
 
 

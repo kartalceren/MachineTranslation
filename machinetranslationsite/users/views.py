@@ -1,7 +1,7 @@
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
 from django.contrib import messages
 from django.urls import reverse
 from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm
@@ -23,6 +23,23 @@ def loggedinhome(request):
 
 def logout(request):
     return render(request, 'users/logout.html')
+
+
+def password(request):
+    if request.method == "POST":
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)  # Important for keeping the user logged in
+            messages.success(request, 'Your password was updated successfully.')
+            return redirect(reverse('site:password'))
+        else:
+            messages.error(request, 'Please correct the error below.')
+
+    else:
+        form = PasswordChangeForm(request.user)
+
+    return render(request, 'users/password_change.html', {'form': form})
 
 
 def register(request):
