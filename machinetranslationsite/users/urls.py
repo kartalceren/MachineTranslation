@@ -1,9 +1,8 @@
 from django.conf import settings
 from django.conf.urls.static import static
-from django.urls import path
+from django.urls import path, reverse_lazy
 from . import views
 from django.contrib.auth import views as auth_view
-
 
 app_name = 'site'
 urlpatterns = [
@@ -12,7 +11,22 @@ urlpatterns = [
     path('login/', auth_view.LoginView.as_view(template_name='users/login.html'), name='login'),
     path('logout/', auth_view.LogoutView.as_view(template_name='users/logout.html'), name='logout'),
     path('register/', views.register, name='register'),
-    path('profile/', views.profile, name='profile')
+    path('profile/', views.profile, name='profile'),
+    path('logged/', views.loggedinhome, name='loggedinhome'),
+    path('password/', views.password, name='password'),
+    path('password_reset/',
+         auth_view.PasswordResetView.as_view(
+             template_name='users/password_reset/password_reset.html',
+             success_url=reverse_lazy('site:password_reset_done'),
+             email_template_name='users/password_reset/password_reset_email.html',
+             subject_template_name='users/password_reset/password_reset_subject.txt'
+         ),
+         name='password_reset'),
+    path('password_reset_done/', auth_view.PasswordResetDoneView.as_view(template_name='users/password_reset/password_reset_sent.html'), name='password_reset_done'),
+    path('password_reset_confirm/<uidb64>/<token>', auth_view.PasswordResetConfirmView.as_view(template_name='users/password_reset/password_reset_form.html', success_url=reverse_lazy('site:password_reset_complete')), name='password_reset_confirm'),
+    path('password_reset_complete/', auth_view.PasswordResetCompleteView.as_view(template_name='users/password_reset/password_reset_success.html'), name='password_reset_complete'),
+
+
 ]
 
 if settings.DEBUG:

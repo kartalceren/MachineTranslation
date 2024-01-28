@@ -1,7 +1,7 @@
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
 from django.contrib import messages
 from django.urls import reverse
 from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm
@@ -17,8 +17,33 @@ def login(request):
     return render(request, 'users/login.html')
 
 
+def loggedinhome(request):
+    return render(request, 'users/loggedinhome.html')
+
+
 def logout(request):
     return render(request, 'users/logout.html')
+
+@login_required
+def password(request):
+    if request.method == "POST":
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)  # Keeps the user logged in
+            messages.success(request, f'Your password was updated successfully.')
+            return redirect(reverse('site:password'))
+        else:
+            messages.error(request, f'Please correct the error below.')
+
+    else:
+        form = PasswordChangeForm(request.user)
+
+    context = {
+        "form": form
+    }
+
+    return render(request, 'users/password.html', context)
 
 
 def register(request):
@@ -29,7 +54,8 @@ def register(request):
         if form.is_valid():
             user = form.save()
             username = form.cleaned_data.get('username')
-            messages.success(request, f'Hi {username}, your account was created successfully. Please login to continue.')
+            messages.success(request,
+                             f'Hi {username}, your account was created successfully. Please login to continue.')
             return redirect(reverse('site:home'))
 
     return render(request, 'users/register.html', {'form': form})
