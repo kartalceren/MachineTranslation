@@ -24,7 +24,7 @@ def loggedinhome(request):
 def logout(request):
     return render(request, 'users/logout.html')
 
-
+@login_required
 def password(request):
     if request.method == "POST":
         form = PasswordChangeForm(request.user, request.POST)
