@@ -30,16 +30,20 @@ def password(request):
         form = PasswordChangeForm(request.user, request.POST)
         if form.is_valid():
             user = form.save()
-            update_session_auth_hash(request, user)  # Important for keeping the user logged in
-            messages.success(request, 'Your password was updated successfully.')
+            update_session_auth_hash(request, user)  # Keeps the user logged in
+            messages.success(request, f'Your password was updated successfully.')
             return redirect(reverse('site:password'))
         else:
-            messages.error(request, 'Please correct the error below.')
+            messages.error(request, f'Please correct the error below.')
 
     else:
         form = PasswordChangeForm(request.user)
 
-    return render(request, 'users/password_change.html', {'form': form})
+    context = {
+        "form": form
+    }
+
+    return render(request, 'users/password.html', context)
 
 
 def register(request):

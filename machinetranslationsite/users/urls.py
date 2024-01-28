@@ -14,7 +14,7 @@ urlpatterns = [
     path('register/', views.register, name='register'),
     path('profile/', views.profile, name='profile'),
     path('logged/', views.loggedinhome, name='loggedinhome'),
-    path('password/', auth_views.PasswordChangeView.as_view(template_name='users/password.html', success_url="/password"), name='password')
+    path('password/', views.password, name='password')
 ]
 
 if settings.DEBUG:
