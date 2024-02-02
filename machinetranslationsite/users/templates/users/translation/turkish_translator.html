@@ -1,0 +1,65 @@
+{% extends 'users/index.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block content %}
+<link href="{% static 'users/styles.css' %}" rel="stylesheet">
+<!-- Page Content-->
+<div class="container px-5 my-5">
+    <!-- Translation Section-->
+    <section>
+        <!-- Translator Card-->
+        <div class="text-center mb-5">
+            <a class="btn btn-primary btn-lg px-5 py-3 me-sm-3 fs-6 fw-bolder" href="/translateenglish">Switch to English</a>
+        </div>
+        <div class="card shadow border-0 rounded-4 mb-5">
+            <div class="card-body p-5">
+                <div class="row align-items-center gx-5">
+                    <div class="text-center mb-5">
+                        <h1 class="display-5 fw-bolder mb-0"><span
+                                class="text-gradient d-inline">Turkish to English</span></h1>
+                    </div>
+                    <div class="text-center mb-1">
+                        <p>Type in Turkish to translate to English</p>
+                    </div>
+                </div>
+            </div>
+
+            <form action="{% url 'site:translatorTurkish' %}" method="post">
+                {% csrf_token %}
+
+                <div class="text-center mb-5">
+                    <div class="d-grid">
+                        <fieldset class="form-group">
+                            {{ form.text }}
+                            {{ form.source_language }}
+                            {{ form.target_language }}
+                        </fieldset>
+                        <a class="btn px-5 py-3 me-sm-3 fs-6 fw-bolder">
+                            <button class="btn btn-primary btn-lg px-5 py-3 me-sm-3 fs-6 fw-bolder" id="submitButton"
+                                    style="margin:5px"
+                                    type="submit">Translate
+                            </button>
+                        </a>
+                    </div>
+                </div>
+            </form>
+
+
+            <div class="bg-light p-4 rounded-4">
+                <div class="profile-container">
+                    {% if translated_text %}
+                    <div class="text-center mb-5">
+                        <h1 class="display-6 fw-bolder mb-0"><span
+                                class="text-gradient d-inline">Translated Text:</span></h1>
+                        <p class="lead fw-light mb-4" style="margin:50px">{{ translated_text }}</p>
+                    </div>
+
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+
+{% endblock %}

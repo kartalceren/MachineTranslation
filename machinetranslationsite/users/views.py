@@ -1,15 +1,21 @@
-from django.contrib.auth import get_user_model, update_session_auth_hash
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
-from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
 from django.contrib import messages
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import PasswordChangeForm
+from django.http import HttpResponseRedirect
+from django.shortcuts import redirect
+from django.shortcuts import render
 from django.urls import reverse
-from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm
+from transformers import MarianMTModel, MarianTokenizer
+
+from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm, TranslationFormEnglish, TranslationFormTurkish
 
 
 # Create your views here.
 
 def home(request):
+    if request.user.is_authenticated:
+        return HttpResponseRedirect('/logged')
     return render(request, 'users/home.html')
 
 
@@ -17,12 +23,19 @@ def login(request):
     return render(request, 'users/login.html')
 
 
+@login_required
 def loggedinhome(request):
     return render(request, 'users/loggedinhome.html')
 
 
+@login_required
+def translate(request):
+    return render(request, 'users/translation/translate_landing.html')
+
+
 def logout(request):
     return render(request, 'users/logout.html')
+
 
 @login_required
 def password(request):
@@ -47,6 +60,8 @@ def password(request):
 
 
 def register(request):
+    if request.user.is_authenticated:
+        return HttpResponseRedirect('/logged')
     form = UserRegisterForm()
 
     if request.method == "POST":
@@ -82,3 +97,63 @@ def profile(request):
         "p_form": p_form
     }
     return render(request, 'users/profile.html', context)
+
+
+def translate_english(text, source_lang, target_lang):
+    model_name = f'Helsinki-NLP/opus-tatoeba-en-tr'
+    model = MarianMTModel.from_pretrained(model_name)
+    tokenizer = MarianTokenizer.from_pretrained(model_name)
+
+    inputs = tokenizer(text, return_tensors="pt")
+    outputs = model.generate(**inputs)
+
+    translated_text = tokenizer.batch_decode(outputs, skip_special_tokens=True)[0]
+    return translated_text
+
+
+@login_required
+def translator_english(request):
+    if request.method == 'POST':
+        form = TranslationFormEnglish(request.POST)
+        if form.is_valid():
+            text = form.cleaned_data['text']
+            source_lang = form.cleaned_data['source_language']
+            target_lang = form.cleaned_data['target_language']
+
+            translated_text = translate_english(text, source_lang, target_lang)
+            return render(request, 'users/translation/english_translator.html',
+                          {'form': form, 'translated_text': translated_text})
+    else:
+        form = TranslationFormEnglish()
+
+    return render(request, 'users/translation/english_translator.html', {'form': form})
+
+
+def translate_turkish(text, source_lang, target_lang):
+    model_name = f'Helsinki-NLP/opus-mt-tr-en'
+    model = MarianMTModel.from_pretrained(model_name)
+    tokenizer = MarianTokenizer.from_pretrained(model_name)
+
+    inputs = tokenizer(text, return_tensors="pt")
+    outputs = model.generate(**inputs)
+
+    translated_text = tokenizer.batch_decode(outputs, skip_special_tokens=True)[0]
+    return translated_text
+
+
+@login_required
+def translator_turkish(request):
+    if request.method == 'POST':
+        form = TranslationFormTurkish(request.POST)
+        if form.is_valid():
+            text = form.cleaned_data['text']
+            source_lang = form.cleaned_data['source_language']
+            target_lang = form.cleaned_data['target_language']
+
+            translated_text = translate_turkish(text, source_lang, target_lang)
+            return render(request, 'users/translation/turkish_translator.html',
+                          {'form': form, 'translated_text': translated_text})
+    else:
+        form = TranslationFormTurkish()
+
+    return render(request, 'users/translation/turkish_translator.html', {'form': form})

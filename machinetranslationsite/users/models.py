@@ -9,3 +9,8 @@ class Profile(models.Model):
 
 def __str__(self):
     return f'{self.user.username} profile'
+
+
+class TranslationTask(models.Model):
+    input_text = models.TextField()
+    output_text = models.TextField()

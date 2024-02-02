@@ -28,3 +28,15 @@ class ProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ['image']
+
+
+class TranslationFormEnglish(forms.Form):
+    text = forms.CharField(widget=forms.Textarea(attrs={'rows': 10, 'cols': 45}), initial='Hi, I am having a lovely day!')
+    source_language = forms.CharField(initial='en', widget=forms.HiddenInput())
+    target_language = forms.CharField(initial='tr', widget=forms.HiddenInput())
+
+
+class TranslationFormTurkish(forms.Form):
+    text = forms.CharField(widget=forms.Textarea(attrs={'rows': 10, 'cols': 45}), initial="Merhaba, güzel bir gün geçiriyorum!")
+    source_language = forms.CharField(initial='tr', widget=forms.HiddenInput())
+    target_language = forms.CharField(initial='en', widget=forms.HiddenInput())
