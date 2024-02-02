@@ -28,13 +28,6 @@
 
     <form action="" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
-          {% if messages %}
-        <ul class="messages">
-            {% for message in messages %}
-               <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
       <fieldset class="form-group">
           {{ u_form|crispy }}
           {{ p_form|crispy }}
