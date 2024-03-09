@@ -9,17 +9,13 @@
                         <div class="col-xxl-5">
                             <!-- Header text content-->
                             <div class="text-center text-xxl-start">
-                                <div class="badge bg-gradient-primary-to-secondary text-white mb-4"><div class="text-uppercase">Hi {{user.username}}</div></div>
+                                <div class="badge bg-gradient-primary-to-secondary text-white mb-2"><div class="text-uppercase">Hi {{user.username}}</div></div>
                                 <div class="fs-3 fw-light text-muted"><span></span>Welcome back to</div>
                                 <div class="fs-3 fw-light text-muted"><span></span>the Turkish to English Translator</div>
                                 <h1 class="display-3 fw-bolder mb-5"><span class="text-gradient d-inline">TurEng Translate</span></h1>
                                 <div class="d-grid gap-3 d-sm-flex justify-content-sm-center justify-content-xxl-start mb-3">
                                     <a class="btn btn-primary btn-lg px-5 py-3 me-sm-3 fs-6 fw-bolder" href="/profile">Profile</a>
                                     <a class="btn btn-primary btn-lg px-5 py-3 me-sm-3 fs-6 fw-bolder" href="/translate">Translate</a>
-                                     <form method="post" action="{% url 'site:logout' %}">
-                            {% csrf_token %}
-                          <button class="btn btn-primary btn-lg px-5 py-3 me-sm-3 fs-6 fw-bolder" id="submitButton" type="submit">Logout</button>
-                            </form>
                                 </div>
                             </div>
                         </div>
@@ -27,7 +23,7 @@
                             <!-- Home picture-->
                             <div class="d-flex justify-content-center mt-5 mt-xxl-0">
                                 <div class="profile bg-gradient-primary-to-secondary">
-                                    <img class="profile-img" src="{% static 'users/home.png' %}" alt="..." />
+                                    <img class="profile-img" src="{% static 'users/homepic.png' %}" alt="..." />
                                     <div class="dots-1">
                                         <!-- SVG Dots-->
                                         <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 191.6 1215.4" style="enable-background: new 0 0 191.6 1215.4" xml:space="preserve">
