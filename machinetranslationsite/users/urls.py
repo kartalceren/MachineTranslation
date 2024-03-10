@@ -5,6 +5,7 @@ from django.urls import path, reverse_lazy
 from . import views
 from django.contrib.auth.decorators import user_passes_test
 from django.shortcuts import redirect
+from .views import translator_english, TranslationHistoryView
 
 
 def user_not_logged(user):
@@ -51,8 +52,8 @@ urlpatterns = [
          name='password_reset_complete'),
     path('translateenglish/', views.translator_english, name='translatorEnglish'),
     path('translateturkish/', views.translator_turkish, name='translatorTurkish'),
-    path('translate/', views.translate, name='translate')
-
+    path('translate/', views.translate, name='translate'),
+    path('translationhistory/', TranslationHistoryView.as_view(), name='translationHistory')
 ]
 
 if settings.DEBUG:

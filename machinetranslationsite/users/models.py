@@ -14,3 +14,18 @@ def __str__(self):
 class TranslationTask(models.Model):
     input_text = models.TextField()
     output_text = models.TextField()
+
+
+class TranslationHistory(models.Model):
+    source_text = models.TextField()
+    target_text = models.TextField()
+    source_language = models.CharField(max_length=255)
+    target_language = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    @classmethod
+    def clear_history(cls):
+        cls.objects.all().delete()
+
+    def __str__(self):
+        return f"{self.source_text} -> {self.target_text}"

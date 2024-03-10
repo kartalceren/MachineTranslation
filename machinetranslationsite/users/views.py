@@ -7,8 +7,9 @@ from django.shortcuts import redirect
 from django.shortcuts import render
 from django.urls import reverse
 from transformers import MarianMTModel, MarianTokenizer
-
+from django.views import View
 from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm, TranslationFormEnglish, TranslationFormTurkish
+from .models import TranslationHistory
 
 
 # Create your views here.
@@ -108,6 +109,23 @@ def translate_english(text, source_lang, target_lang):
     outputs = model.generate(**inputs)
 
     translated_text = tokenizer.batch_decode(outputs, skip_special_tokens=True)[0]
+
+    # Check if the current translation exists in history
+    existing_translations = TranslationHistory.objects.filter(
+        source_text=text,
+        target_text=translated_text,
+        source_language=source_lang,
+        target_language=target_lang
+    ).first()
+
+    if not existing_translations:
+        TranslationHistory.objects.create(
+            source_text=text,
+            target_text=translated_text,
+            source_language=source_lang,
+            target_language=target_lang
+        )
+
     return translated_text
 
 
@@ -121,6 +139,7 @@ def translator_english(request):
             target_lang = form.cleaned_data['target_language']
 
             translated_text = translate_english(text, source_lang, target_lang)
+
             return render(request, 'users/translation/english_translator.html',
                           {'form': form, 'translated_text': translated_text})
     else:
@@ -138,6 +157,23 @@ def translate_turkish(text, source_lang, target_lang):
     outputs = model.generate(**inputs)
 
     translated_text = tokenizer.batch_decode(outputs, skip_special_tokens=True)[0]
+
+    # Check if the current translation exists in history
+    existing_translations = TranslationHistory.objects.filter(
+        source_text=text,
+        target_text=translated_text,
+        source_language=source_lang,
+        target_language=target_lang
+    ).first()
+
+    if not existing_translations:
+        TranslationHistory.objects.create(
+            source_text=text,
+            target_text=translated_text,
+            source_language=source_lang,
+            target_language=target_lang
+        )
+
     return translated_text
 
 
@@ -157,3 +193,19 @@ def translator_turkish(request):
         form = TranslationFormTurkish()
 
     return render(request, 'users/translation/turkish_translator.html', {'form': form})
+
+
+class TranslationHistoryView(View):
+    template_name = 'users/translation/translation_history.html'
+
+    def get(self, request, *args, **kwargs):
+        translations = TranslationHistory.objects.all()
+        return render(request, self.template_name, {'translations': translations})
+
+    def post(self, request, *args, **kwargs):
+        if 'clear_history' in request.POST:
+            TranslationHistory.clear_history()
+            return redirect('site:translationHistory')
+
+        allTranslations = TranslationHistory.objects.all()
+        return render (request, "users/translation/translation_history.html", {"translations": allTranslations})
