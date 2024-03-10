@@ -2,6 +2,7 @@ from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
 from django.shortcuts import render
@@ -24,12 +25,12 @@ def login(request):
     return render(request, 'users/login.html')
 
 
-@login_required
+@login_required(login_url="/login")
 def loggedinhome(request):
     return render(request, 'users/loggedinhome.html')
 
 
-@login_required
+@login_required(login_url="/login")
 def translate(request):
     return render(request, 'users/translation/translate_landing.html')
 
@@ -38,7 +39,7 @@ def logout(request):
     return render(request, 'users/logout.html')
 
 
-@login_required
+@login_required(login_url="/login")
 def password(request):
     if request.method == "POST":
         form = PasswordChangeForm(request.user, request.POST)
@@ -77,7 +78,7 @@ def register(request):
     return render(request, 'users/register.html', {'form': form})
 
 
-@login_required
+@login_required(login_url="/login")
 def profile(request):
     if request.method == "POST":
         u_form = UserUpdateForm(request.POST, instance=request.user)
@@ -129,7 +130,7 @@ def translate_english(text, source_lang, target_lang):
     return translated_text
 
 
-@login_required
+@login_required(login_url="/login")
 def translator_english(request):
     if request.method == 'POST':
         form = TranslationFormEnglish(request.POST)
@@ -177,7 +178,7 @@ def translate_turkish(text, source_lang, target_lang):
     return translated_text
 
 
-@login_required
+@login_required(login_url="/login")
 def translator_turkish(request):
     if request.method == 'POST':
         form = TranslationFormTurkish(request.POST)
@@ -195,8 +196,9 @@ def translator_turkish(request):
     return render(request, 'users/translation/turkish_translator.html', {'form': form})
 
 
-class TranslationHistoryView(View):
+class TranslationHistoryView(LoginRequiredMixin, View):
     template_name = 'users/translation/translation_history.html'
+    login_url = '/login'
 
     def get(self, request, *args, **kwargs):
         translations = TranslationHistory.objects.all()
@@ -208,4 +210,4 @@ class TranslationHistoryView(View):
             return redirect('site:translationHistory')
 
         allTranslations = TranslationHistory.objects.all()
-        return render (request, "users/translation/translation_history.html", {"translations": allTranslations})
+        return render(request, "users/translation/translation_history.html", {"translations": allTranslations})
